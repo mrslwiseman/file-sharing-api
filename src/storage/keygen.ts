@@ -6,7 +6,6 @@ interface KeyPair {
 }
 
 class KeyGen {
-    constructor() { };
     generateKeyPair(): KeyPair {
         const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
             modulusLength: 512,
@@ -16,15 +15,27 @@ class KeyGen {
             },
             privateKeyEncoding: {
                 type: 'pkcs8',
-                format: 'der'
+                format: 'der',
             }
         }
         )
-        return { privateKey: Buffer.from(privateKey).toString('hex'), publicKey: Buffer.from(publicKey).toString('hex') }
+
+        return { privateKey: privateKey.toString('hex'), publicKey: publicKey.toString('hex') }
     }
 
     getFileName(privateKey: string) {
-        return crypto.createPublicKey(privateKey);
+        const fileName =
+            crypto.createPublicKey({
+                key: privateKey,
+                format: 'der',
+                type: 'pkcs1',
+                encoding: 'hex'
+            }).export({
+                type: 'spki',
+                format: 'der'
+            }).toString('hex')
+
+        return fileName;
     }
 }
 

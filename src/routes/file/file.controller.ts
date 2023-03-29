@@ -1,18 +1,14 @@
-import fileStorage from '../../storage/localDiskFileStorageStrategy';
 import { NextFunction, Request, Response } from 'express'
 import fs from 'fs'
-import os from 'node:os'
 import path from 'path';
 import busboy from 'busboy'
 import StorageContext from '../../storage/storageContext';
-import LocalDiskFileStorageStrategy from '../../storage/localDiskFileStorageStrategy';
-import { IncomingHttpHeaders } from 'node:http';
+import LocalDiskFileStorageStrategy from '../../storage/providers/localFileSystem'
 import KeyGen from '../../storage/keygen';
 
 function createStorageContext(storageHeaders: any) {
     switch (storageHeaders['x-storage-type']) {
         case 'localFs':
-            console.log('localRs');
             return new StorageContext(new LocalDiskFileStorageStrategy())
         case 'gcp':
             throw new Error('not implemented');
@@ -24,15 +20,13 @@ function createStorageContext(storageHeaders: any) {
 }
 
 export const fileDownloadHandler = (req: Request, res: Response) => {
-    // todo: fix mime type stuff, extension, filename
     const { publicKey } = req.params;
-    // const file = `${process.cwd()}/data/example.txt`;
-
-    // // const stream = fileStorage.getReadStream(file)
-    // stream.pipe(res);
     const storageContext = createStorageContext(req.headers);
-    // res.set('Content-Disposition', `attachment; filename=${publicKey}`);
     const stream = storageContext.getReadStream(publicKey);
+
+    if (stream === 'notFound') {
+        return res.sendStatus(404);
+    }
 
     stream.pipe(res)
 
@@ -58,6 +52,17 @@ export const fileUploadHandler = async (req: Request, res: Response, next: NextF
     req.pipe(bb);
 }
 
-export const fileDeleteHandler = (req: Request, res: Response) => {
-    throw new Error('to implement')
+export const fileDeleteHandler = async (req: Request, res: Response) => {
+    const { privateKey } = req.params;
+    const storageContext = createStorageContext(req.headers);
+    const fileName = new KeyGen().getFileName(privateKey);
+    const result = await storageContext.delete(fileName)
+
+    if (result === 'notFound') {
+        res.sendStatus(404)
+        return;
+    }
+
+    res.sendStatus(200)
+
 }

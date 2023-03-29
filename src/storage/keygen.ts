@@ -9,24 +9,22 @@ class KeyGen {
     constructor() { };
     generateKeyPair(): KeyPair {
         const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
-            modulusLength: 1024,
+            modulusLength: 512,
             publicKeyEncoding: {
                 type: 'spki',
-                format: 'pem'
+                format: 'der'
             },
             privateKeyEncoding: {
                 type: 'pkcs8',
-                format: 'pem'
+                format: 'der'
             }
         }
         )
-        return { privateKey, publicKey }
+        return { privateKey: Buffer.from(privateKey).toString('hex'), publicKey: Buffer.from(publicKey).toString('hex') }
     }
 
     getFileName(privateKey: string) {
-        const publicKey = crypto.createPublicKey(privateKey)
-
-        return publicKey;
+        return crypto.createPublicKey(privateKey);
     }
 }
 

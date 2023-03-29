@@ -1,4 +1,4 @@
-import fileStorage from '../service/storage.service';
+import fileStorage from '../../service/storage.service';
 import { Request, Response } from 'express'
 
 export const fileDownloadHandler = (req: Request, res: Response) => {

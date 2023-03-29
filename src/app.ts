@@ -10,13 +10,13 @@ const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, () => console.log('listening on port', PORT))
 
 if (process.env.NODE_ENV === 'dev') {
-    process.on('SIGUSR2', function () {
+    process.once('SIGUSR2', function () {
         console.log('Shutting down');
         server.close()
     })
 }
 
-process.on('SIGINT', function () {
+process.once('SIGINT', function () {
     console.log('Shutting down');
     server.close()
 })

@@ -7,12 +7,10 @@ import LocalDiskFileStorageStrategy from '../../storage/providers/localFileSyste
 import KeyGen from '../../storage/keygen';
 
 function createStorageContext(storageHeaders: any) {
-    switch (storageHeaders['x-storage-type']) {
-        case 'localFs':
+    switch (process.env.PROVIDER) {
+        case 'local':
             return new StorageContext(new LocalDiskFileStorageStrategy())
-        case 'gcp':
-            throw new Error('not implemented');
-        case 's3':
+        case 'google':
             throw new Error('not implemented');
         default:
             return new StorageContext(new LocalDiskFileStorageStrategy())

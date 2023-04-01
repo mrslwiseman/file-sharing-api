@@ -1,54 +1,61 @@
-import crypto from "crypto";
-import util from "util";
+import crypto from 'crypto'
 
 interface KeyPair {
-  publicKey: string;
-  privateKey: string;
+    publicKey: string;
+    privateKey: string;
 }
 
-const keyGenPromisified = util.promisify(crypto.generateKeyPair);
 class KeyGen {
-  private encoding: BufferEncoding;
+    private encoding: BufferEncoding;
+    private _derivePublicKey: typeof crypto.createPublicKey
+    private _generateKeyPair: typeof crypto.generateKeyPair
 
-  constructor() {
-    this.encoding = "base64url";
-  }
-  async generateKeyPair(): Promise<KeyPair> {
-    const { privateKey, publicKey } = await keyGenPromisified("rsa", {
-      // todo: this is not the most secure modulus length
-      modulusLength: 1024,
-      publicKeyEncoding: {
-        type: "spki",
-        format: "der",
-      },
-      privateKeyEncoding: {
-        type: "pkcs8",
-        format: "der",
-      },
-    });
+    constructor(cryptoDep: typeof crypto) {
+        this.encoding = "base64url";
+        const x = cryptoDep.generateKeyPair
+        this._generateKeyPair = cryptoDep.generateKeyPair;
+        this._derivePublicKey = cryptoDep.createPublicKey;
+    }
 
-    return {
-      privateKey: privateKey.toString(this.encoding),
-      publicKey: publicKey.toString(this.encoding),
-    };
-  }
+    async generateKeyPair(): Promise<KeyPair> {
+        const { privateKey, publicKey } = await new Promise<any>((resolve, reject) => this._generateKeyPair("rsa", {
+            // todo: this is not the most secure modulus length
+            modulusLength: 1024,
+            publicKeyEncoding: {
+                type: "spki",
+                format: "der",
+            },
+            privateKeyEncoding: {
+                type: "pkcs8",
+                format: "der",
+            },
+        }, (err, puKey, prKey) => {
+            if (err) reject(err);
+            resolve({ publicKey: puKey, privateKey: prKey })
+        }))
 
-  getFileName(privateKey: string) {
-    const fileName = crypto
-      .createPublicKey({
-        key: privateKey,
-        format: "der",
-        type: "pkcs1",
-        encoding: this.encoding,
-      })
-      .export({
-        type: "spki",
-        format: "der",
-      })
-      .toString(this.encoding);
+        return {
+            privateKey: privateKey.toString(this.encoding),
+            publicKey: publicKey.toString(this.encoding),
+        };
+    }
 
-    return fileName;
-  }
+    getFileName(privateKey: string) {
+        const fileName = this
+            ._derivePublicKey({
+                key: privateKey,
+                format: "der",
+                type: "pkcs1",
+                encoding: this.encoding,
+            })
+            .export({
+                type: "spki",
+                format: "der",
+            })
+            .toString(this.encoding);
+
+        return fileName;
+    }
 }
 
-export default new KeyGen();
+export default KeyGen;

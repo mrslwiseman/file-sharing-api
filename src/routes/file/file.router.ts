@@ -1,15 +1,16 @@
-
-import express from 'express';
-import { fileDeleteHandler, fileDownloadHandler, fileUploadHandler } from './file.controller';
+import express from "express";
+import {
+  fileDeleteHandler,
+  fileDownloadHandler,
+  fileUploadHandler,
+} from "./file.controller";
 
 const fileRouter = express.Router();
 
-fileRouter.post('/', fileUploadHandler)
+fileRouter.post("/", fileUploadHandler);
 
-fileRouter.get('/:publicKey', fileDownloadHandler)
+fileRouter.get("/:publicKey", fileDownloadHandler);
 
-fileRouter.delete('/:privateKey',
-    fileDeleteHandler
-)
+fileRouter.delete("/:privateKey", fileDeleteHandler);
 
-export default fileRouter
+export default fileRouter;

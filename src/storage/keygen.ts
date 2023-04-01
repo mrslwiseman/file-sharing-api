@@ -1,42 +1,54 @@
-import crypto from 'crypto'
+import crypto from "crypto";
+import util from "util";
 
 interface KeyPair {
-    publicKey: string;
-    privateKey: string;
+  publicKey: string;
+  privateKey: string;
 }
 
+const keyGenPromisified = util.promisify(crypto.generateKeyPair);
 class KeyGen {
-    generateKeyPair(): KeyPair {
-        const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
-            modulusLength: 512,
-            publicKeyEncoding: {
-                type: 'spki',
-                format: 'der'
-            },
-            privateKeyEncoding: {
-                type: 'pkcs8',
-                format: 'der',
-            }
-        }
-        )
+  private encoding: BufferEncoding;
 
-        return { privateKey: privateKey.toString('hex'), publicKey: publicKey.toString('hex') }
-    }
+  constructor() {
+    this.encoding = "base64url";
+  }
+  async generateKeyPair(): Promise<KeyPair> {
+    const { privateKey, publicKey } = await keyGenPromisified("rsa", {
+      // todo: this is not the most secure modulus length
+      modulusLength: 1024,
+      publicKeyEncoding: {
+        type: "spki",
+        format: "der",
+      },
+      privateKeyEncoding: {
+        type: "pkcs8",
+        format: "der",
+      },
+    });
 
-    getFileName(privateKey: string) {
-        const fileName =
-            crypto.createPublicKey({
-                key: privateKey,
-                format: 'der',
-                type: 'pkcs1',
-                encoding: 'hex'
-            }).export({
-                type: 'spki',
-                format: 'der'
-            }).toString('hex')
+    return {
+      privateKey: privateKey.toString(this.encoding),
+      publicKey: publicKey.toString(this.encoding),
+    };
+  }
 
-        return fileName;
-    }
+  getFileName(privateKey: string) {
+    const fileName = crypto
+      .createPublicKey({
+        key: privateKey,
+        format: "der",
+        type: "pkcs1",
+        encoding: this.encoding,
+      })
+      .export({
+        type: "spki",
+        format: "der",
+      })
+      .toString(this.encoding);
+
+    return fileName;
+  }
 }
 
-export default KeyGen;
+export default new KeyGen();

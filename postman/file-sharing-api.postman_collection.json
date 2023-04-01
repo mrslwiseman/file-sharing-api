@@ -1,0 +1,87 @@
+{
+  "info": {
+    "_postman_id": "4d559d91-b6d5-4b82-978c-eaf1c2e27929",
+    "name": "file-sharing-api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "localhost:8080/files/",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "/home/matt/Desktop/matt-wiseman-inventory-filtered.csv"
+            },
+            {
+              "key": "Content-Type",
+              "value": "text/plain",
+              "type": "default"
+            }
+          ]
+        },
+        "url": {
+          "raw": "localhost:8080/files",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["files"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "localhost:8080/files/:publicKey",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:8080/files/305c300d06092a864886f70d0101010500034b003048024100cc5575bc6264278a97939ed31f99d74c41af6a3b34af3bb0f7e5616e36e27b20a1146460e510e8b35a9786fec104536f70bd55d500ecdd9f94c2c9ca84126be10203010001",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": [
+            "files",
+            "305c300d06092a864886f70d0101010500034b003048024100cc5575bc6264278a97939ed31f99d74c41af6a3b34af3bb0f7e5616e36e27b20a1146460e510e8b35a9786fec104536f70bd55d500ecdd9f94c2c9ca84126be10203010001"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "localhost:8080/files/:privateKey",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "/home/matt/Desktop/matt-wiseman-inventory-filtered.csv"
+            },
+            {
+              "key": "Content-Type",
+              "value": "text/plain",
+              "type": "default"
+            }
+          ]
+        },
+        "url": {
+          "raw": "localhost:8080/files/30820153020100300d06092a864886f70d01010105000482013d30820139020100024100dc7bd37dbac22ef5fcb8d982b2006efe1761076529904fc3f442255adde34399f579d21d37028297ef8afaab59c81794a0c6989435dd465f9fb6c4f6a648d9a302030100010240242997158f151c58b23bab493962c2d1a00a05097d98b2cc83fa795ffef6b07678ec53c65027d80cb1d5e6248effad03107685027dbf72fc075088f77c000cb9022100fcbff7945d9aa20f5d363ad9350458f079bbf1e6c1ba3e5f83d28f492e069907022100df51a42bbacc5a44d7560f48d70c00b08ca6bb22a8a7255ab8ebfda959b09f8502201b5ad77bda49a322908f0efd752c7c47c29521d03cc5607ccbf29d09698ed33f02201b62e2b42e2b4362afd9b0f428d322fe83b12abfdc58eb1ece10bac1daeaeb1502201dc9dcc81c51a25dcdb785fc009fbc0cc93ecf879d09cea691df9329135bc704",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": [
+            "files",
+            "30820153020100300d06092a864886f70d01010105000482013d30820139020100024100dc7bd37dbac22ef5fcb8d982b2006efe1761076529904fc3f442255adde34399f579d21d37028297ef8afaab59c81794a0c6989435dd465f9fb6c4f6a648d9a302030100010240242997158f151c58b23bab493962c2d1a00a05097d98b2cc83fa795ffef6b07678ec53c65027d80cb1d5e6248effad03107685027dbf72fc075088f77c000cb9022100fcbff7945d9aa20f5d363ad9350458f079bbf1e6c1ba3e5f83d28f492e069907022100df51a42bbacc5a44d7560f48d70c00b08ca6bb22a8a7255ab8ebfda959b09f8502201b5ad77bda49a322908f0efd752c7c47c29521d03cc5607ccbf29d09698ed33f02201b62e2b42e2b4362afd9b0f428d322fe83b12abfdc58eb1ece10bac1daeaeb1502201dc9dcc81c51a25dcdb785fc009fbc0cc93ecf879d09cea691df9329135bc704"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

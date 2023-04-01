@@ -41,20 +41,26 @@ class KeyGen {
     }
 
     getFileName(privateKey: string) {
-        const fileName = this
-            ._derivePublicKey({
-                key: privateKey,
-                format: "der",
-                type: "pkcs1",
-                encoding: this.encoding,
-            })
-            .export({
-                type: "spki",
-                format: "der",
-            })
-            .toString(this.encoding);
+        try {
 
-        return fileName;
+            const fileName = this
+                ._derivePublicKey({
+                    key: privateKey,
+                    format: "der",
+                    type: "pkcs1",
+                    encoding: this.encoding,
+                })
+                .export({
+                    type: "spki",
+                    format: "der",
+                })
+                .toString(this.encoding);
+            return fileName;
+        } catch (err) {
+            // todo: handle
+            return
+        }
+
     }
 }
 

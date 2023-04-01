@@ -3,7 +3,7 @@ import fs from "fs";
 import { StorageStrategy } from "../storageContext";
 import path from "node:path";
 
-const FOLDER = process.env.FOLDER || "";
+const FOLDER = process.env.FOLDER || "data";
 
 const isErrnoException = (e: unknown): e is NodeJS.ErrnoException =>
     "code" in (e as any) ? true : false;

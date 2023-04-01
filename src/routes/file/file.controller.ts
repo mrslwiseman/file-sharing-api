@@ -51,6 +51,11 @@ export const fileDeleteHandler = async (req: Request, res: Response) => {
     const { privateKey } = req.params;
     const storageContext = createStorageContext();
     const fileName = keyGen.getFileName(privateKey);
+
+    if (!fileName) {
+        return res.sendStatus(400);
+    }
+
     const result = await storageContext.delete(fileName);
 
     if (!result) {

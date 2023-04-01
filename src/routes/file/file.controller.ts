@@ -18,10 +18,10 @@ function createStorageContext() {
     }
 }
 
-export const fileDownloadHandler = (req: Request, res: Response) => {
+export const fileDownloadHandler = async (req: Request, res: Response) => {
     const { publicKey } = req.params;
     const storageContext = createStorageContext();
-    const stream = storageContext.getReadStream(publicKey);
+    const stream = await storageContext.getReadStream(publicKey);
 
     if (!stream) {
         return res.sendStatus(404);

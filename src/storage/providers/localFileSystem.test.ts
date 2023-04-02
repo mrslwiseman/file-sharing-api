@@ -12,6 +12,7 @@ describe("LocalDiskFileStorageStrategy", () => {
     let fsPromiseRmStub: any;
 
     const fileName = "example.txt";
+    const dir = "data"
 
     beforeAll(() => {
         strategy = new LocalDiskFileStorageStrategy();
@@ -37,7 +38,7 @@ describe("LocalDiskFileStorageStrategy", () => {
             strategy.getWriteStream(fileName);
             sinon.assert.calledOnceWithExactly(
                 fsCreateWriteStreamStub,
-                path.join(fileName)
+                path.join(dir, fileName)
             );
         });
     });
@@ -47,15 +48,15 @@ describe("LocalDiskFileStorageStrategy", () => {
             await strategy.getReadStream(fileName);
             sinon.assert.calledOnceWithExactly(
                 fsCreateReadStreamStub,
-                fileName,
+                path.join(dir, fileName),
                 "utf8"
             );
         });
 
-        it("should return undefined if file does not exist", async () => {
+        it("should return false if file does not exist", async () => {
             fsPromiseStatStub.rejects({ code: "ENOENT" });
             const result = await strategy.getReadStream(fileName);
-            expect(result).toBeUndefined();
+            expect(result).toBe(false)
         });
 
         it("should throw error if there's an error accessing the file", async () => {
@@ -71,14 +72,14 @@ describe("LocalDiskFileStorageStrategy", () => {
             await strategy.delete(fileName);
             sinon.assert.calledOnceWithExactly(
                 fsPromiseRmStub,
-                path.join(fileName)
+                path.join(dir, fileName)
             );
         });
 
-        it("should return undefined if file does not exist", async () => {
+        it("should return false if file does not exist", async () => {
             fsPromiseRmStub.rejects({ code: "ENOENT" });
             const result = await strategy.delete(fileName);
-            expect(result).toBeUndefined();
+            expect(result).toBe(false)
         });
 
         it("should throw error if there's an error deleting the file", async () => {

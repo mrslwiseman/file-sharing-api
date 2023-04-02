@@ -18,7 +18,7 @@ class LocalDiskFileStorageStrategy implements StorageStrategy {
             await fsPromise.stat(path.join(FOLDER, fileName));
         } catch (err) {
             if (isErrnoException(err) && err.code === "ENOENT") {
-                return;
+                return false;
             }
             throw err;
         }

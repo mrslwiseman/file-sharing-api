@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+   extensions = [pgcrypto]
+}
+
+model file {
+  id   String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  filename String
+  mime_type String
+  public_key String @unique
+  private_key String @unique
+  created DateTime @db.Timestamptz(0) @default(now())
+  last_accessed DateTime @db.Timestamptz(0) @default(now())
+
+  @@index([last_accessed])
+}
+
+model limit {
+  id   String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ip String @db.Inet
+  date DateTime	@db.Date
+  upload_kb BigInt
+  download_kb BigInt
+
+  @@unique([ip, date])
+}

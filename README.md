@@ -24,6 +24,8 @@ Pre requisites
 - docker
 - docker-compose
 
+Run `npm ci`.
+
 Run `npm start`.
 This script will run in the following order:
 
@@ -31,6 +33,8 @@ This script will run in the following order:
 - transpile typescript and start API via ts-node
 
 ## Testing
+
+Make sure to have the API running in a background terminal.
 
 Run `npm test`.
 This script will run in the following order:

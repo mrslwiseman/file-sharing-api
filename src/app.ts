@@ -1,5 +1,11 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
+console.log(process.env)
+
 import express from "express";
 import fileRouter from "./routes/file/file.router";
+
 
 const app = express();
 

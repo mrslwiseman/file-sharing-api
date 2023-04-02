@@ -1,5 +1,10 @@
 const request = require('supertest');
-const appUrl = 'http://localhost:8080';
+
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const appUrl = `http://localhost:${process.env.PORT}`;
 
 async function uploadFile() {
     const response = await request(appUrl)
